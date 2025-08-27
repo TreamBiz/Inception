@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stock Simulator</title>
+  <link rel="stylesheet" href="design.css">
+  <script src="Company_D.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="assets">
+      <h3>Assets</h3>
+      <div class="stock">
+        <span>Expanse</span>
+        <span class="price" id="price">$223.00</span>
+        <div class="buttons">
+          <input type="number" id="quantity" min="1" value="1" style="width:60px;">
+          <button id="buyBtn">Buy</button>
+          <button id="sellBtn">Sell</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="portfolio">
+        <h3>Portfolio</h3>
+        <p>Cash: <span id="cash"></span></p>
+        <p>Shares Owned: <span id="shares"></span></p>
+        <p>Total Value: <span id="value"></span></p>
+      </div>
+
+      <div class="newsletter">
+        <h3>Newsletter</h3>
+        <p>Company A Reports Strong Earnings</p>
+      </div>
+      <a href="../../index.html">← Back to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>

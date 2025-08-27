@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stock Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Simple freeze overlay */
+    #freezeOverlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.9);
+      color: #fff; display: none;
+      align-items: center; justify-content: center;
+      z-index: 9999; text-align: center; padding: 20px;
+      font-family: system-ui, Arial, sans-serif;
+      font-size: 2rem;
+    }
+    #freezeOverlay .box {
+      background: #1e1e1e; padding: 24px 28px; border-radius: 12px;
+      max-width: 520px;
+    }
+    #portfolioValue {
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Inception</h1>
+  </header>
+
+  <!-- Stocks Section -->
+  <section>
+    <h2>Companies</h2>
+    <div class="row">
+      <div class="card"><h3><a href="companies/Company_A/Company_A.html">Orchard</a></h3></div>
+      <div class="card"><h3><a href="companies/Company_B/Company_B.html">Pavillion</a></h3></div>
+      <div class="card"><h3><a href="companies/Company_C/Company_C.html">Aurora</a></h3></div>
+      <div class="card"><h3><a href="companies/Company_D/Company_D.html">Expanse</a></h3></div>
+      <div class="card"><h3><a href="companies/Company_E/Company_E.html">Velocity</a></h3></div>
+      <div class="card"><h3><a href="companies/Bond_X/Company_X.html">Nadia</a></h3></div>
+      <div class="card"><h3><a href="companies/Bond_Y/Company_Y.html">Simsong</a></h3></div>
+    </div>
+  </section>
+
+  <!-- Mutual Funds Section -->
+  <section>
+    <h2>Mutual Funds</h2>
+    <div class="row">
+      <div class="card"><h3><a href="companies/FundAlpha/FundAlpha.html">Horizon Fund</a></h3></div>
+      <div class="card"><h3><a href="companies/Bond_Z/Fund_Z.html">Broadview Index</a></h3></div>
+      <div class="card"><h3><a href="companies/FundBeta/FundBeta.html">Dwt</a></h3></div>
+    </div>
+  </section>
+
+  <button id="submitShares">Submit All Shares</button>
+  <button id="sellAll">Sell All Shares</button>
+  <p id="submitStatus"></p>
+  <p id="portfolioValue">Total Portfolio Value: ₹0</p>
+
+  <!-- Freeze Overlay -->
+  <div id="freezeOverlay">
+    <div class="box">
+      <h2>⏳ Waiting for new prices…</h2>
+      <p>We’re waiting for the admin to publish the next trade event.</p>
+      <p id="freezeHint" style="opacity:.8;font-size:1rem;margin-top:8px;"></p>
+    </div>
+  </div>
+
+  <script>
+    // === MAIN PAGE JS ===
+
+    const SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbwoFYK02R7rVoiu6H1Hxg2yulNobslRKsH2eF1_NvkNpbHO9PdvKeCxANhNA_XnNCbI/exec";
+
+    const companies = [
+      "CompanyA", "CompanyB", "CompanyC", "CompanyD", "CompanyE",
+      "CompanyX", "CompanyY", "FundAlpha", "FundZ", "FundBeta"
+    ];
+
+    // seed starting cash = 100,000 if not set
+    if (!localStorage.getItem("cash")) {
+      localStorage.setItem("cash", "100000");
+    }
+
+    // --- UI helpers ---
+    function setFreezeState(isFrozen) {
+      document.getElementById("freezeOverlay").style.display = isFrozen ? "flex" : "none";
+      document.getElementById("freezeHint").textContent = isFrozen ? "Polling Sheet2 for new prices..." : "";
+    }
+
+    // Get one price from Apps Script
+    async function getPrice(company) {
+      const res = await fetch(`${SCRIPT_URL}?mode=getPrice&company=${encodeURIComponent(company)}`, { cache: "no-store" });
+      const txt = await res.text();
+      const num = parseFloat(txt);
+      if (isNaN(num)) throw new Error(`Bad price for ${company}: ${txt}`);
+      return num;
+    }
+
+    // Unfreeze when any company changes price
+    function waitForNewPrice(company, oldPrice) {
+      const interval = setInterval(async () => {
+        try {
+          const price = await getPrice(company);
+          if (parseFloat(price) !== parseFloat(oldPrice)) {
+            clearInterval(interval);
+            setFreezeState(false);
+          }
+        } catch (e) {
+          console.warn("poll error", company, e.message);
+        }
+      }, 3000);
+    }
+
+    // --- Portfolio Value ---
+    function updatePortfolioValue() {
+      let cash = parseFloat(localStorage.getItem("cash")) || 0;
+      let totalSharesValue = 0;
+
+      companies.forEach(c => {
+        const shares = parseInt(localStorage.getItem(c + "_shares")) || 0;
+        const price = parseFloat(localStorage.getItem(c + "_price")) || 0;
+        totalSharesValue += shares * price;
+      });
+
+      const total = cash + totalSharesValue;
+      document.getElementById("portfolioValue").innerText =
+        `Total Portfolio Value: ₹${total.toFixed(2)}`;
+    }
+
+    // --- Sell All Shares (live prices) ---
+    document.getElementById("sellAll").addEventListener("click", async () => {
+      let cash = parseFloat(localStorage.getItem("cash")) || 0;
+      let proceeds = 0;
+      let soldSomething = false;
+
+      for (const c of companies) {
+        const shares = parseInt(localStorage.getItem(c + "_shares")) || 0;
+        if (shares <= 0) continue;
+
+        // Get live price; fallback to cached price if fetch fails
+        let price = 0;
+        try {
+          price = await getPrice(c);
+          localStorage.setItem(c + "_price", String(price)); // update cache
+        } catch (e) {
+          price = parseFloat(localStorage.getItem(c + "_price")) || 0;
+        }
+
+        if (price > 0) {
+          proceeds += shares * price;
+          soldSomething = true;
+          localStorage.setItem(c + "_shares", "0"); // clear shares
+        }
+      }
+
+      if (!soldSomething) {
+        alert("You don't own any shares to sell!");
+        return;
+      }
+
+      cash += proceeds;
+      localStorage.setItem("cash", String(cash));
+      updatePortfolioValue();
+
+      alert(`✅ All shares sold!\nProceeds: ₹${proceeds.toFixed(2)}\nNew Cash: ₹${cash.toFixed(2)}`);
+    });
+
+    // --- Submit All Shares (with username check + send to sheet) ---
+    document.getElementById("submitShares").addEventListener("click", async () => {
+      // 1) Auth check
+      const allowedUsers = ["user1","user2","user3","user4","user5","user6","user7","user8","user9","user10"];
+      const userId = prompt("Enter your user ID:")?.trim();
+      if (!userId || !allowedUsers.includes(userId)) {
+        alert("You are not authorized to submit data.");
+        return;
+      }
+
+      // 2) Build portfolio from localStorage
+      const portfolio = {};
+      companies.forEach(c => portfolio[c] = parseInt(localStorage.getItem(c + "_shares")) || 0);
+
+      if (!Object.values(portfolio).some(v => v > 0)) {
+        alert("You don't own any shares to submit!");
+        return;
+      }
+
+      // 3) Send to Apps Script
+      const params = new URLSearchParams({ userId });
+      Object.entries(portfolio).forEach(([k,v]) => params.append(k, v));
+      const url = `${SCRIPT_URL}?${params.toString()}`;
+
+      try {
+        const resp = await fetch(url, { cache: "no-store" });
+        const text = await resp.text();
+        document.getElementById("submitStatus").innerText = text || "Submitted.";
+        alert("✅ Portfolio submitted successfully!");
+
+        // 4) Freeze and wait for new price
+        setFreezeState(true);
+        for (const company of companies) {
+          try {
+            const oldPrice = await getPrice(company);
+            waitForNewPrice(company, oldPrice);
+          } catch {}
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById("submitStatus").innerText = "Error submitting portfolio.";
+        alert("❌ Error submitting portfolio.");
+      }
+    });
+
+    // Initial portfolio value display
+    updatePortfolioValue();
+  </script>
+</body>
+</html>

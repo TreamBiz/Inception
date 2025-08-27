@@ -1,0 +1,152 @@
+/* ---------- Global Styles ---------- */
+body {
+  background: radial-gradient(circle at top left, #141414, #0d0d0d);
+  color: #ffffff;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ---------- Main Layout ---------- */
+.container {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* ---------- Glass Panels ---------- */
+.assets, .portfolio, .newsletter {
+  background: rgba(20, 20, 20, 0.85);
+  padding: 1.8rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6),
+              0 0 18px rgba(0, 224, 255, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.assets:hover, .portfolio:hover, .newsletter:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(0, 224, 255, 0.35),
+              0 0 22px rgba(0, 224, 255, 0.25);
+}
+
+.assets { flex: 2; }
+.sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ---------- Section Titles ---------- */
+.assets h2, .portfolio h3, .newsletter h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #00e0ff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 12px rgba(0, 224, 255, 0.9);
+  border-bottom: 2px solid rgba(0, 224, 255, 0.25);
+  padding-bottom: 8px;
+}
+
+/* ---------- Stock Section ---------- */
+.stock h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.stock .price {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 0.5rem 0 1rem;
+  color: #ffdf6c;
+  text-shadow: 0 0 10px rgba(255, 223, 108, 0.8);
+}
+
+/* ---------- Buttons ---------- */
+.buttons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.buy, .sell {
+  padding: 0.7rem 1.4rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+/* Buy button - Green Neon */
+.buy {
+  background: linear-gradient(135deg, #00c853, #009624);
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 200, 83, 0.7);
+}
+.buy:hover {
+  background: linear-gradient(135deg, #00ff80, #00cc44);
+  transform: scale(1.07);
+  box-shadow: 0 0 18px rgba(0, 255, 128, 0.9);
+}
+
+/* Sell button - Red Neon */
+.sell {
+  background: linear-gradient(135deg, #e53935, #b71c1c);
+  color: white;
+  box-shadow: 0 0 10px rgba(229, 57, 53, 0.7);
+}
+.sell:hover {
+  background: linear-gradient(135deg, #ff4d4d, #d50000);
+  transform: scale(1.07);
+  box-shadow: 0 0 18px rgba(255, 77, 77, 0.9);
+}
+
+/* ---------- Portfolio ---------- */
+.portfolio p {
+  margin: 10px 0;
+  font-size: 1rem;
+  color: #ddd;
+}
+
+.portfolio span {
+  float: right;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* ---------- Newsletter ---------- */
+.newsletter p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: #ccc;
+}
+
+/* ---------- Back Link ---------- */
+a {
+  color: #00e0ff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+a:hover {
+  color: #ff6ec7;
+  text-shadow: 0 0 10px rgba(255, 110, 199, 0.9);
+}
