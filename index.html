@@ -25,6 +25,17 @@
       margin-top: 20px;
       font-size: 1.2rem;
     }
+
+    /* Make cards clickable links */
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card:hover {
+      transform: scale(1.02);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -37,13 +48,13 @@
   <section>
     <h2>Companies</h2>
     <div class="row">
-      <div class="card"><h3><a href="companies/Company_A/Company_A.html">Orchard</a></h3></div>
-      <div class="card"><h3><a href="companies/Company_B/Company_B.html">Pavillion</a></h3></div>
-      <div class="card"><h3><a href="companies/Company_C/Company_C.html">Aurora</a></h3></div>
-      <div class="card"><h3><a href="companies/Company_D/Company_D.html">Expanse</a></h3></div>
-      <div class="card"><h3><a href="companies/Company_E/Company_E.html">Velocity</a></h3></div>
-      <div class="card"><h3><a href="companies/Bond_X/Company_X.html">Nadia</a></h3></div>
-      <div class="card"><h3><a href="companies/Bond_Y/Company_Y.html">Simsong</a></h3></div>
+      <a href="companies/Company_A/Company_A.html" class="card"><h3>Orchard</h3></a>
+      <a href="companies/Company_B/Company_B.html" class="card"><h3>Pavillion</h3></a>
+      <a href="companies/Company_C/Company_C.html" class="card"><h3>Aurora</h3></a>
+      <a href="companies/Company_D/Company_D.html" class="card"><h3>Expanse</h3></a>
+      <a href="companies/Company_E/Company_E.html" class="card"><h3>Velocity</h3></a>
+      <a href="companies/Bond_X/Company_X.html" class="card"><h3>Nadia</h3></a>
+      <a href="companies/Bond_Y/Company_Y.html" class="card"><h3>Simsong</h3></a>
     </div>
   </section>
 
@@ -51,9 +62,9 @@
   <section>
     <h2>Mutual Funds</h2>
     <div class="row">
-      <div class="card"><h3><a href="companies/FundAlpha/FundAlpha.html">Horizon Fund</a></h3></div>
-      <div class="card"><h3><a href="companies/Bond_Z/Fund_Z.html">Broadview Index</a></h3></div>
-      <div class="card"><h3><a href="companies/FundBeta/FundBeta.html">Dwt</a></h3></div>
+      <a href="companies/FundAlpha/FundAlpha.html" class="card"><h3>Horizon Fund</h3></a>
+      <a href="companies/Bond_Z/Fund_Z.html" class="card"><h3>Broadview Index</h3></a>
+      <a href="companies/FundBeta/FundBeta.html" class="card"><h3>Dwt</h3></a>
     </div>
   </section>
 
@@ -221,3 +232,4 @@
   </script>
 </body>
 </html>
+
