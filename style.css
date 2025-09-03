@@ -156,16 +156,12 @@ h2 {
 #portfolioBar div:nth-child(1) {
   color: #ffffff;  /* neon green */
   font-size: 1.6rem;
-  text-shadow: 0 0 12px rgba(0, 255, 157, 0.9),
-               0 0 24px rgba(0, 255, 157, 0.7);
 }
 
 /* Stock Owned (second item in portfolio bar) */
 #portfolioBar div:nth-child(2) {
   color: #ffffff;  /* neon purple */
   font-size: 1.8rem;   /* bigger than Cash */
-  text-shadow: 0 0 12px rgba(166, 77, 255, 0.9),
-               0 0 24px rgba(166, 77, 255, 0.7);
 }
 
 
@@ -181,6 +177,7 @@ button-container {
   justify-content: center;
   margin-top: 30px;
 }
+
 
 
 
