@@ -20,21 +20,13 @@
       background: #1e1e1e; padding: 24px 28px; border-radius: 12px;
       max-width: 520px;
     }
-    #portfolioValue {
-      font-weight: bold;
-      margin-top: 20px;
-      font-size: 1.2rem;
-    }
 
-    /* Make cards clickable links */
-    .card {
-      display: block;
-      text-decoration: none;
-      color: inherit;
-    }
-    .card:hover {
-      transform: scale(1.02);
-      cursor: pointer;
+    /* Portfolio bar at top right */
+    #portfolioBar {
+      position: absolute;
+      top: 10px; right: 20px;
+      display: flex; gap: 18px;
+      font-size: 1rem; font-weight: bold;
     }
   </style>
 </head>
@@ -42,17 +34,21 @@
 
   <header>
     <h1>Inception</h1>
+    <div id="portfolioBar">
+      <div id="cashDisplay">Cash: ₹0</div>
+      <div id="stocksOwned">Stocks Owned: ₹0</div>
+    </div>
   </header>
 
   <!-- Stocks Section -->
   <section>
     <h2>Companies</h2>
     <div class="row">
-      <a href="companies/Company_A/Company_A.html" class="card"><h3>Orchard</h3></a>
-      <a href="companies/Company_B/Company_B.html" class="card"><h3>Pavillion</h3></a>
-      <a href="companies/Company_C/Company_C.html" class="card"><h3>Aurora</h3></a>
-      <a href="companies/Company_D/Company_D.html" class="card"><h3>Expanse</h3></a>
-      <a href="companies/Company_E/Company_E.html" class="card"><h3>Velocity</h3></a>
+      <a href="companies/Company_A/Company_A.html" class="card"><h3>Aple</h3></a>
+      <a href="companies/Company_B/Company_B.html" class="card"><h3>Mirosof</h3></a>
+      <a href="companies/Company_C/Company_C.html" class="card"><h3>Googule</h3></a>
+      <a href="companies/Company_D/Company_D.html" class="card"><h3>Amzom</h3></a>
+      <a href="companies/Company_E/Company_E.html" class="card"><h3>Telsa</h3></a>
       <a href="companies/Bond_X/Company_X.html" class="card"><h3>Nadia</h3></a>
       <a href="companies/Bond_Y/Company_Y.html" class="card"><h3>Simsong</h3></a>
     </div>
@@ -64,14 +60,13 @@
     <div class="row">
       <a href="companies/FundAlpha/FundAlpha.html" class="card"><h3>Horizon Fund</h3></a>
       <a href="companies/Bond_Z/Fund_Z.html" class="card"><h3>Broadview Index</h3></a>
-      <a href="companies/FundBeta/FundBeta.html" class="card"><h3>Dwt</h3></a>
+      <a href="companies/FundBeta/FundBeta.html" class="card"><h3>LongHall</h3></a>
     </div>
   </section>
 
   <button id="submitShares">Submit All Shares</button>
   <button id="sellAll">Sell All Shares</button>
   <p id="submitStatus"></p>
-  <p id="portfolioValue">Total Portfolio Value: ₹0</p>
 
   <!-- Freeze Overlay -->
   <div id="freezeOverlay">
@@ -96,6 +91,9 @@
     // seed starting cash = 100,000 if not set
     if (!localStorage.getItem("cash")) {
       localStorage.setItem("cash", "100000");
+    }
+    if (!localStorage.getItem("initialCash")) {
+      localStorage.setItem("initialCash", "100000");
     }
 
     // --- UI helpers ---
@@ -128,20 +126,14 @@
       }, 3000);
     }
 
-    // --- Portfolio Value ---
-    function updatePortfolioValue() {
-      let cash = parseFloat(localStorage.getItem("cash")) || 0;
-      let totalSharesValue = 0;
+    // --- Portfolio Display ---
+    function updatePortfolioDisplay() {
+      const cash = parseFloat(localStorage.getItem("cash")) || 0;
+      const initialCash = parseFloat(localStorage.getItem("initialCash")) || 100000;
+      const stocksOwned = initialCash - cash;
 
-      companies.forEach(c => {
-        const shares = parseInt(localStorage.getItem(c + "_shares")) || 0;
-        const price = parseFloat(localStorage.getItem(c + "_price")) || 0;
-        totalSharesValue += shares * price;
-      });
-
-      const total = cash + totalSharesValue;
-      document.getElementById("portfolioValue").innerText =
-        `Total Portfolio Value: ₹${total.toFixed(2)}`;
+      document.getElementById("cashDisplay").innerText = `Cash: ₹${cash.toFixed(2)}`;
+      document.getElementById("stocksOwned").innerText = `Stocks Owned: ₹${stocksOwned.toFixed(2)}`;
     }
 
     // --- Sell All Shares (live prices) ---
@@ -177,14 +169,13 @@
 
       cash += proceeds;
       localStorage.setItem("cash", String(cash));
-      updatePortfolioValue();
+      updatePortfolioDisplay();
 
       alert(`✅ All shares sold!\nProceeds: ₹${proceeds.toFixed(2)}\nNew Cash: ₹${cash.toFixed(2)}`);
     });
 
-    // --- Submit All Shares (with username check + send to sheet) ---
+    // --- Submit All Shares ---
     document.getElementById("submitShares").addEventListener("click", async () => {
-      // 1) Auth check
       const allowedUsers = ["user1","user2","user3","user4","user5","user6","user7","user8","user9","user10"];
       const userId = prompt("Enter your user ID:")?.trim();
       if (!userId || !allowedUsers.includes(userId)) {
@@ -192,7 +183,6 @@
         return;
       }
 
-      // 2) Build portfolio from localStorage
       const portfolio = {};
       companies.forEach(c => portfolio[c] = parseInt(localStorage.getItem(c + "_shares")) || 0);
 
@@ -201,7 +191,6 @@
         return;
       }
 
-      // 3) Send to Apps Script
       const params = new URLSearchParams({ userId });
       Object.entries(portfolio).forEach(([k,v]) => params.append(k, v));
       const url = `${SCRIPT_URL}?${params.toString()}`;
@@ -212,7 +201,6 @@
         document.getElementById("submitStatus").innerText = text || "Submitted.";
         alert("✅ Portfolio submitted successfully!");
 
-        // 4) Freeze and wait for new price
         setFreezeState(true);
         for (const company of companies) {
           try {
@@ -227,8 +215,8 @@
       }
     });
 
-    // Initial portfolio value display
-    updatePortfolioValue();
+    // Initial display
+    updatePortfolioDisplay();
   </script>
 </body>
 </html>
