@@ -154,9 +154,10 @@ h2 {
 
 /* Cash (first item in portfolio bar) */
 #portfolioBar div:nth-child(1) {
-  color: #ffffff;  /* neon green */
+  color: #ffffff;  /* white */
   font-size: 1.6rem;
 }
+
 
 /* Stock Owned (second item in portfolio bar) */
 #portfolioBar div:nth-child(2) {
@@ -177,6 +178,7 @@ button-container {
   justify-content: center;
   margin-top: 30px;
 }
+
 
 
 
