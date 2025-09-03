@@ -122,3 +122,52 @@ h2 {
               0 0 45px rgba(255, 23, 68, 0.8);
 }
 
+/* ---------- Portfolio Bar Styling ---------- */
+#portfolioBar {
+  position: absolute;
+  top: 10px; 
+  right: 20px;
+  display: flex;
+  flex-direction: column; /* stack items vertically */
+  gap: 8px;
+  font-size: 1rem; 
+  font-weight: bold;
+  text-align: right;
+}
+
+/* ---------- Portfolio Bar Styling ---------- */
+#portfolioBar {
+  position: absolute;
+  top: 10px; 
+  right: 20px;
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  gap: 10px;
+  text-align: right;
+}
+
+#portfolioBar div {
+  font-size: 1.4rem;        /* bigger font */
+  font-weight: 700;         /* bolder */
+  color: #00e0ff;
+  text-shadow: 0 0 10px rgba(0, 224, 255, 0.9),
+               0 0 20px rgba(0, 224, 255, 0.7),
+               0 0 30px rgba(0, 224, 255, 0.5);
+  letter-spacing: 0.5px;
+}
+
+
+/* ---------- Center Buttons ---------- */
+#submitShares, #sellAll {
+  display: inline-block;
+  margin: 15px;
+}
+
+button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+/* Make sure the buttons are wrapped in a flexbox container */
+
