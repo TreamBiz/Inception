@@ -36,6 +36,7 @@
     <h1>Inception</h1>
     <div id="portfolioBar">
       <div id="cashDisplay">Cash: ₹0</div>
+      <div id="stocksOwned">Stocks Owned: ₹0</div>
     </div>
   </header>
 
@@ -44,7 +45,7 @@
     <h2>Companies</h2>
     <div class="row">
       <a href="companies/Company_A/Company_A.html" class="card"><h3>Apple</h3></a>
-      <a href="companies/Company_B/Company_B.html" class="card"><h3>Mircrosoft</h3></a>
+      <a href="companies/Company_B/Company_B.html" class="card"><h3>Microsoft</h3></a>
       <a href="companies/Company_C/Company_C.html" class="card"><h3>Alphabet</h3></a>
       <a href="companies/Company_D/Company_D.html" class="card"><h3>Amazon</h3></a>
       <a href="companies/Company_E/Company_E.html" class="card"><h3>Tesla</h3></a>
@@ -170,7 +171,43 @@
       localStorage.setItem("cash", String(cash));
       updatePortfolioDisplay();
 
-      alert(`✅ All shares sold!\nProceeds: ₹${proceeds.toFixed(2)}\nNew Cash: ₹${cash.toFixed(2)}`);
+      // Calculate profit/loss
+      const initialCash = parseFloat(localStorage.getItem("initialCash")) || 100000;
+      const profit = cash - initialCash;
+
+      // Create popup overlay
+      const popup = document.createElement("div");
+      popup.style.position = "fixed";
+      popup.style.inset = "0";
+      popup.style.background = "rgba(0,0,0,0.7)";
+      popup.style.display = "flex";
+      popup.style.alignItems = "center";
+      popup.style.justifyContent = "center";
+      popup.style.zIndex = "10000";
+
+      popup.innerHTML = `
+        <div style="
+          background:#fff; color:#000; padding:24px 28px;
+          border-radius:12px; max-width:400px; text-align:center;
+          font-family: system-ui, Arial, sans-serif;
+        ">
+          <h2>💰 Sale Complete!</h2>
+          <p><strong>Proceeds:</strong> ₹${proceeds.toFixed(2)}</p>
+          <p><strong>New Cash Balance:</strong> ₹${cash.toFixed(2)}</p>
+          <p><strong>${profit >= 0 ? "Profit" : "Loss"}:</strong> ₹${profit.toFixed(2)}</p>
+          <button id="closePopup" style="
+            margin-top:15px; padding:8px 16px;
+            background:#007BFF; color:#fff; border:none; border-radius:8px;
+            cursor:pointer;
+          ">Close</button>
+        </div>
+      `;
+
+      document.body.appendChild(popup);
+
+      document.getElementById("closePopup").addEventListener("click", () => {
+        document.body.removeChild(popup);
+      });
     });
 
     // --- Submit All Shares ---
@@ -213,15 +250,9 @@
         alert("❌ Error submitting portfolio.");
       }
     });
+
     // Initial display
     updatePortfolioDisplay();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
