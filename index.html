@@ -183,22 +183,60 @@
       popup.style.zIndex = "10000";
 
       popup.innerHTML = `
-        <div style="
-          background:#fff; color:#000; padding:24px 28px;
-          border-radius:12px; max-width:400px; text-align:center;
-          font-family: system-ui, Arial, sans-serif;
-        ">
-          <h2>💰 Sale Complete!</h2>
-          <p><strong>Proceeds:</strong> ₹${proceeds.toFixed(2)}</p>
-          <p><strong>New Cash Balance:</strong> ₹${cash.toFixed(2)}</p>
-          <p><strong>${profit >= 0 ? "Profit" : "Loss"}:</strong> ₹${profit.toFixed(2)}</p>
-          <button id="closePopup" style="
-            margin-top:15px; padding:8px 16px;
-            background:#007BFF; color:#fff; border:none; border-radius:8px;
-            cursor:pointer;
-          ">Close</button>
-        </div>
-      `;
+  <div style="
+    background: rgba(10, 10, 20, 0.95);
+    color: #fff;
+    padding: 32px 36px;
+    border-radius: 16px;
+    max-width: 420px;
+    text-align: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7),
+                0 0 50px rgba(0, 200, 255, 0.4);
+    border: 2px solid rgba(0, 255, 255, 0.4);
+  ">
+    <h2 style="
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: #00f0ff;
+      text-shadow: 0 0 12px #00f0ff, 0 0 24px #00cfff;
+    ">💰 Sale Complete!</h2>
+
+    <p style="
+      font-size: 18px;
+      margin: 10px 0;
+      color: #fff;
+      text-shadow: 0 0 8px rgba(255,255,255,0.6);
+    "><strong>New Cash Balance:</strong> ₹${cash.toFixed(2)}</p>
+
+    <p style="
+      font-size: 18px;
+      margin: 10px 0;
+      color: ${profit >= 0 ? "#00ff99" : "#ff4d6d"};
+      text-shadow: 0 0 10px ${profit >= 0 ? "#00ffaa" : "#ff5c8a"};
+    "><strong>${profit >= 0 ? "Profit" : "Loss"}:</strong> ₹${profit.toFixed(2)}</p>
+
+    <button id="closePopup" style="
+      margin-top: 20px;
+      padding: 10px 24px;
+      background: transparent;
+      color: #00f0ff;
+      border: 2px solid #00f0ff;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: all 0.25s ease;
+      text-shadow: 0 0 10px #00f0ff;
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+    " onmouseover="this.style.background='#00f0ff';this.style.color='#000';this.style.textShadow='none';" 
+       onmouseout="this.style.background='transparent';this.style.color='#00f0ff';this.style.textShadow='0 0 10px #00f0ff';">
+      Close
+    </button>
+  </div>
+`;
+
 
       document.body.appendChild(popup);
 
@@ -253,5 +291,6 @@
   </script>
 </body>
 </html>
+
 
 
