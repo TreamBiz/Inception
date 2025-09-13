@@ -130,10 +130,8 @@
     function updatePortfolioDisplay() {
       const cash = parseFloat(localStorage.getItem("cash")) || 0;
       const initialCash = parseFloat(localStorage.getItem("initialCash")) || 100000;
-      const stocksOwned = initialCash - cash;
 
       document.getElementById("cashDisplay").innerText = `Cash: ₹${cash.toFixed(2)}`;
-      document.getElementById("stocksOwned").innerText = `Stocks Owned: ₹${stocksOwned.toFixed(2)}`;
     }
 
     // --- Sell All Shares (live prices) ---
@@ -256,3 +254,4 @@
   </script>
 </body>
 </html>
+
