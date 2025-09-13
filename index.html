@@ -36,7 +36,6 @@
     <h1>Inception</h1>
     <div id="portfolioBar">
       <div id="cashDisplay">Cash: ₹0</div>
-      <div id="stocksOwned">Stocks Owned: ₹0</div>
     </div>
   </header>
 
@@ -135,7 +134,6 @@
       document.getElementById("cashDisplay").innerText = `Cash: ₹${cash.toFixed(2)}`;
       document.getElementById("stocksOwned").innerText = `Stocks Owned: ₹${stocksOwned.toFixed(2)}`;
     }
-
     // --- Sell All Shares (live prices) ---
     document.getElementById("sellAll").addEventListener("click", async () => {
       let cash = parseFloat(localStorage.getItem("cash")) || 0;
@@ -210,6 +208,8 @@
       });
     });
 
+
+
     // --- Submit All Shares ---
     document.getElementById("submitShares").addEventListener("click", async () => {
       const allowedUsers = ["user1","user2","user3","user4","user5","user6","user7","user8","user9","user10"];
@@ -250,9 +250,9 @@
         alert("❌ Error submitting portfolio.");
       }
     });
-
     // Initial display
     updatePortfolioDisplay();
   </script>
 </body>
 </html>
+
