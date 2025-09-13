@@ -213,86 +213,12 @@
         alert("❌ Error submitting portfolio.");
       }
     });
-    // --- Sell All Shares (live prices) ---
-document.getElementById("sellAll").addEventListener("click", async () => {
-  let cash = parseFloat(localStorage.getItem("cash")) || 0;
-  let proceeds = 0;
-  let soldSomething = false;
-
-  for (const c of companies) {
-    const shares = parseInt(localStorage.getItem(c + "_shares")) || 0;
-    if (shares <= 0) continue;
-
-    // Get live price; fallback to cached price if fetch fails
-    let price = 0;
-    try {
-      price = await getPrice(c);
-      localStorage.setItem(c + "_price", String(price)); // update cache
-    } catch (e) {
-      price = parseFloat(localStorage.getItem(c + "_price")) || 0;
-    }
-
-    if (price > 0) {
-      proceeds += shares * price;
-      soldSomething = true;
-      localStorage.setItem(c + "_shares", "0"); // clear shares
-    }
-  }
-
-  if (!soldSomething) {
-    alert("You don't own any shares to sell!");
-    return;
-  }
-
-  cash += proceeds;
-  localStorage.setItem("cash", String(cash));
-  updatePortfolioDisplay();
-
-  // Calculate profit
-  const initialCash = parseFloat(localStorage.getItem("initialCash")) || 100000;
-  const profit = cash - initialCash;
-
-  // Create popup overlay
-  const popup = document.createElement("div");
-  popup.style.position = "fixed";
-  popup.style.inset = "0";
-  popup.style.background = "rgba(0,0,0,0.7)";
-  popup.style.display = "flex";
-  popup.style.alignItems = "center";
-  popup.style.justifyContent = "center";
-  popup.style.zIndex = "10000";
-
-  popup.innerHTML = `
-    <div style="
-      background:#fff; color:#000; padding:24px 28px; 
-      border-radius:12px; max-width:400px; text-align:center;
-      font-family: system-ui, Arial, sans-serif;
-    ">
-      <h2>💰 Sale Complete!</h2>
-      <p><strong>Proceeds:</strong> ₹${proceeds.toFixed(2)}</p>
-      <p><strong>New Cash Balance:</strong> ₹${cash.toFixed(2)}</p>
-      <p><strong>Total Profit:</strong> ₹${profit.toFixed(2)}</p>
-      <button id="closePopup" style="
-        margin-top:15px; padding:8px 16px; 
-        background:#007BFF; color:#fff; border:none; border-radius:8px;
-        cursor:pointer;
-      ">Close</button>
-    </div>
-  `;
-
-  document.body.appendChild(popup);
-
-  document.getElementById("closePopup").addEventListener("click", () => {
-    document.body.removeChild(popup);
-  });
-});
-
-
     // Initial display
     updatePortfolioDisplay();
   </script>
 </body>
 </html>
+
 
 
 
