@@ -94,6 +94,10 @@
     if (!localStorage.getItem("initialCash")) {
       localStorage.setItem("initialCash", "100000");
     }
+    if (!localStorage.getItem("lastRoundCash")) {
+  // baseline = starting cash
+      localStorage.setItem("lastRoundCash", "100000");
+    }  
     // --- UI helpers ---
     function setFreezeState(isFrozen) {
       document.getElementById("freezeOverlay").style.display = isFrozen ? "flex" : "none";
@@ -164,7 +168,7 @@ document.getElementById("sellAll").addEventListener("click", async () => {
   }
 
   // Store last round's cash before updating
-  const lastRoundCash = parseFloat(localStorage.getItem("lastRoundCash")) || cash;
+  const lastRoundCash = parseFloat(localStorage.getItem("lastRoundCash"));
 
   cash += proceeds;
   localStorage.setItem("cash", String(cash));
@@ -293,6 +297,7 @@ document.getElementById("sellAll").addEventListener("click", async () => {
   </script>
 </body>
 </html>
+
 
 
 
