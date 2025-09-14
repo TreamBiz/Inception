@@ -94,6 +94,9 @@
     if (!localStorage.getItem("initialCash")) {
       localStorage.setItem("initialCash", "100000");
     }
+    if (!localStorage.getItem("lastRoundCash")) {
+      localStorage.setItem("lastRoundCash", "100000");
+    }
 
     // --- UI helpers ---
     function setFreezeState(isFrozen) {
@@ -294,6 +297,7 @@ document.getElementById("sellAll").addEventListener("click", async () => {
   </script>
 </body>
 </html>
+
 
 
 
